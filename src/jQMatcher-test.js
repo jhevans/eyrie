@@ -19,6 +19,5 @@ describe('jQMatcher', function() {
         var comparison = window.jQMatchers.toExist().negativeCompare($('body'));
         expect(comparison.pass).toBe(false);
         expect(comparison.message).toBe("Expected element not to exist");
-
     });
 });

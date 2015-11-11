@@ -1,5 +1,8 @@
 window.jQMatchers = (function () {
     'use strict';
+    function doesExist(actual) {
+        return actual.length > 0;
+    }
 
     return {
         toExist: function () {
@@ -8,7 +11,7 @@ window.jQMatchers = (function () {
                     var pass,
                         message = "Expected element to exist";
 
-                    pass = this.doesExist(actual);
+                    pass = doesExist(actual);
 
                     return {
                         pass: pass,
@@ -19,15 +22,12 @@ window.jQMatchers = (function () {
                     var pass,
                         message = "Expected element not to exist";
 
-                    pass = !this.doesExist(actual);
+                    pass = !doesExist(actual);
 
                     return {
                         pass: pass,
                         message: message
                     }
-                },
-                doesExist: function (actual) {
-                    return actual.length > 0;
                 }
             }
         }
