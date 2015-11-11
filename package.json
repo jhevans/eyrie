@@ -1,0 +1,19 @@
+{
+  "name": "jasmine-schema-matcher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "schemaMatcher.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jquery": "^2.1.4",
+    "karma": "^0.13.15",
+    "karma-chrome-launcher": "^0.2.1",
+    "karma-jasmine": "^0.3.6"
+  },
+  "scripts": {
+    "test": "karma start karma.conf.js"
+  },
+  "author": "John Evans",
+  "license": "ISC"
+}
