@@ -1,6 +1,14 @@
 window.schemaMatcher = (function () {
     'use strict';
 
+    function deepCompare(actual, expected, selectorPath){
+        // for each key, value
+        // if value is a function
+        // return value(element.find(key))
+        // result = deepCompare(element.find(key), value, selectorPath)
+        // results.add(result)
+    }
+
     return {
         toMatchSchema: function () {
             return {
@@ -9,11 +17,10 @@ window.schemaMatcher = (function () {
                         message = "no message";
 
                     pass = false;
-                    // for each key, value
-                    // if value is a function
-                    // return value(element.find(key))
-                    // result = compare(element.find(key), value)
+                    // results = deepCompare(actual, expected, "")
+                    // result = compileResults(results)
                     // return result
+
 
                     return {
                         pass: pass,
