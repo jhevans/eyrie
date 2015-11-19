@@ -1,42 +1,24 @@
 window.schemaMatcher = (function () {
     'use strict';
 
-    function deepCompare(actual, expected, selectorPath){
-        // for each key, value
-        // if value is a function
-        // return value(element.find(key))
-        // result = deepCompare(element.find(key), value, selectorPath)
-        // results.add(result)
-    }
-
     return {
         toMatchSchema: function () {
             return {
-                compare: function (actual, expected) {
-                    var pass,
-                        message = "no message";
+                compare: function (jQActual, expectedSchema) {
+                    var message = "no message",
+                        results = [],
+                        selector,
+                        matcher,
+                        result;
 
-                    pass = false;
-                    // results = deepCompare(actual, expected, "")
-                    // result = compileResults(results)
-                    // return result
-
-
-                    return {
-                        pass: pass,
-                        message: message
-                    };
-                },
-                negativeCompare: function(actual, expected){
-                    var pass,
-                        message = "no message";
-
-                    pass = false;
-
-                    return {
-                        pass: pass,
-                        message: message
-                    };
+                    for(selector in expectedSchema){
+                        if(expectedSchema.hasOwnProperty(selector)){
+                            matcher = expectedSchema[selector];
+                            result = matcher(jQActual.find(selector));
+                            results.push(result);
+                        }
+                    }
+                    return results[0];
                 }
             }
         }
