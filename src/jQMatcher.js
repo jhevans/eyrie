@@ -4,12 +4,20 @@ window.jQMatchers = (function () {
         return actual.length > 0;
     }
 
+    function getMessage(description) {
+        return description ? "Expected element " + description + " to exist" : "Expected element to exist";
+    }
+
+    function getInverseMessage(description) {
+        return description ? "Expected element " + description + " not to exist" : "Expected element not to exist";
+    }
+
     return {
         toExist: function () {
             return {
-                compare: function (actual) {
+                compare: function (actual, description) {
                     var pass,
-                        message = "Expected element to exist";
+                        message = getMessage(description);
 
                     pass = doesExist(actual);
 
@@ -18,9 +26,9 @@ window.jQMatchers = (function () {
                         message: message
                     };
                 },
-                negativeCompare: function(actual){
+                negativeCompare: function(actual, description){
                     var pass,
-                        message = "Expected element not to exist";
+                        message = getInverseMessage(description);
 
                     pass = !doesExist(actual);
 
