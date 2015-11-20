@@ -1,7 +1,4 @@
-// TODO: implement di
-//into('schemaMatcher', schemaMatcher).inject('compileMessages');
-
-window.schemaMatcher = (function (compileMessages, _) {
+var schemaMatcher = (function (compileMessages, _) {
     'use strict';
 
     function allPass(results){
@@ -37,4 +34,5 @@ window.schemaMatcher = (function (compileMessages, _) {
             }
         }
     };
-})(window.compileMessages, window._);
+});
+window.schemaMatcher = schemaMatcher(window.compileMessages, window._);

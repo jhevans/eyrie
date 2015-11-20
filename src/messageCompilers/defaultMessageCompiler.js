@@ -1,4 +1,4 @@
-window.compileMessages = (function () {
+var compileMessages = (function () {
     'use strict';
     // TODO: extract as injectable dependency
     return function(results){
@@ -10,5 +10,6 @@ window.compileMessages = (function () {
         });
         return message;
     }
+});
 
-})();
+window.compileMessages = compileMessages();

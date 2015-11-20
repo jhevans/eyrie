@@ -1,4 +1,4 @@
-window.jQMatchers = (function () {
+var jQMatchers = (function () {
     'use strict';
     function doesExist(actual) {
         return actual.length > 0;
@@ -40,4 +40,6 @@ window.jQMatchers = (function () {
             }
         }
     };
-})();
+});
+
+window.jQMatchers = jQMatchers();
