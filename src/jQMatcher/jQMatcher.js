@@ -5,11 +5,11 @@ window.jQMatchers = (function () {
     }
 
     function getMessage(description) {
-        return description ? "Expected element " + description + " to exist" : "Expected element to exist";
+        return description ? "Expected element '" + description + "' to exist" : "Expected element to exist";
     }
 
     function getInverseMessage(description) {
-        return description ? "Expected element " + description + " not to exist" : "Expected element not to exist";
+        return description ? "Expected element '" + description + "' not to exist" : "Expected element not to exist";
     }
 
     return {

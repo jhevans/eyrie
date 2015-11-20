@@ -1,4 +1,4 @@
-describe('integration tests', function() {
+describe('schemaMatcher', function() {
     'use strict';
     var shouldExist,
         shouldNotExist,
@@ -19,32 +19,46 @@ describe('integration tests', function() {
 
     it('should pass for single element schema with shouldExist matcher when element exists', function(){
         var expectedSchema = {
-            ".single-element": shouldExist
+            ".first": shouldExist
         };
-        expect(shouldExist(element.find('.single-element')).pass).toBe(true);
+
         expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
     });
 
     it('should fail for single element schema with shouldNotExist matcher when element exists not', function(){
         var expectedSchema = {
-            ".single-element": shouldNotExist
+            ".first": shouldNotExist
+        };
+
+        expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(false);
+    });
+
+    it('should pass for flat schema when all predicates pass', function() {
+        var expectedSchema = {
+            '.first': shouldExist,
+            '.second': shouldExist
+        };
+
+        expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
+    });
+
+    it('should fail for flat schema when one predicate fails', function() {
+        var expectedSchema = {
+            '.second': shouldExist,
+            '.non-existent': shouldExist
         };
         expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(false);
     });
 
-    xit('should pass for flat schema when all elements exist', function() {
+    it('should set appropriate message when one predicate fails', function(){
         var expectedSchema = {
-            '.first-class': shouldExist,
-            '.second-class': shouldExist
+            '.second': shouldExist,
+            '.non-existent': shouldExist
         };
-        expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
+        var expectedMessage = "" +
+            "Element does not match schema:\n" +
+            "Expected element '.non-existent' to exist\n";
+        expect(schemaMatcher.compare(element, expectedSchema).message).toEqual(expectedMessage);
     });
 
-    xit('should fail for flat schema when one element exists not', function() {
-        var expectedSchema = {
-            '.first-class': shouldExist,
-            '.second-class': shouldExist
-        };
-        expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
-    });
 });

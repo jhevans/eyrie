@@ -15,7 +15,7 @@ describe('jQMatcher', function() {
     it('should include description in message if description is provided and element does not exist', function(){
         var comparison = window.jQMatchers.toExist().compare($('.does-not-exist'), ELEMENT_DESCRIPTION);
         expect(comparison.pass).toBe(false);
-        expect(comparison.message).toBe("Expected element " + ELEMENT_DESCRIPTION + " to exist");
+        expect(comparison.message).toBe("Expected element '" + ELEMENT_DESCRIPTION + "' to exist");
     });
 
     it('should match if inverse and element does not exist', function() {
@@ -32,6 +32,6 @@ describe('jQMatcher', function() {
     it('should include description in message if description is provided is inverse and element does exist', function() {
         var comparison = window.jQMatchers.toExist().negativeCompare($('body'), ELEMENT_DESCRIPTION);
         expect(comparison.pass).toBe(false);
-        expect(comparison.message).toBe("Expected element " + ELEMENT_DESCRIPTION + " not to exist");
+        expect(comparison.message).toBe("Expected element '" + ELEMENT_DESCRIPTION + "' not to exist");
     });
 });
