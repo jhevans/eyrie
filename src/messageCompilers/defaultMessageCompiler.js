@@ -1,13 +1,17 @@
 var compileMessages = (function () {
     'use strict';
-    // TODO: extract as injectable dependency
-    return function(results){
-        var message = "Element does not match schema:\n";
+
+    return function (results, prefix) {
+        var message = prefix || "";
+
+        var failures = [];
         results.forEach(function(result){
             if (!result.pass){
-                message += result.message + "\n";
+                failures.push(result.message)
             }
         });
+
+        message = message + failures.join('\n');
         return message;
     }
 });

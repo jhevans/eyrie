@@ -17,10 +17,11 @@ describe('defaultMessageCompiler', function() {
             }
         ];
 
-        var expected = "Element does not match schema:\n" +
+        var prefix = "Element does not match schema:\n";
+        var expected = prefix +
             "one\n" +
             "two\n" +
-            "three\n";
-        expect(compileMessages(results)).toBe(expected)
+            "three";
+        expect(compileMessages(results, prefix)).toBe(expected)
     });
 });
