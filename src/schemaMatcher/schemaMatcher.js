@@ -1,20 +1,13 @@
-window.schemaMatcher = (function () {
+// TODO: implement di
+//into('schemaMatcher', schemaMatcher).inject('compileMessages');
+
+window.schemaMatcher = (function (compileMessages, _) {
     'use strict';
 
     function allPass(results){
         return _.all(results, function(result){
             return result.pass;
         });
-    }
-
-    function compileMessages(results){
-        var message = "Element does not match schema:\n";
-        results.forEach(function(result){
-            if (!result.pass){
-                message += result.message + "\n";
-            }
-        });
-        return message;
     }
 
     return {
@@ -44,4 +37,4 @@ window.schemaMatcher = (function () {
             }
         }
     };
-})();
+})(window.compileMessages, window._);
