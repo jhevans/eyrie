@@ -3,13 +3,17 @@ describe('schemaMatcher', function() {
     var shouldExist,
         shouldNotExist,
         schemaMatcher,
+        exactSchemaMatcher,
         element,
         testHtml;
+
+    var NO_MATCH_HEADER = "Element does not match schema:\n";
 
     beforeEach(function(){
         shouldExist = window.jQMatchers.toExist().compare;
         shouldNotExist = window.jQMatchers.toExist().negativeCompare;
         schemaMatcher = window.schemaMatcher.toMatchSchema();
+        exactSchemaMatcher = window.schemaMatcher.toMatchSchemaExactly();
 
         testHtml = window.__html__['src/schemaMatcher/testHtml.html'];
         $('body').append(testHtml);
@@ -56,7 +60,7 @@ describe('schemaMatcher', function() {
                 '.non-existent': shouldExist
             };
             var expectedMessage = "" +
-                "Element does not match schema:\n" +
+                NO_MATCH_HEADER +
                 "Expected element '.non-existent' to exist";
             expect(schemaMatcher.compare(element, expectedSchema).message).toEqual(expectedMessage);
         });
@@ -90,12 +94,82 @@ describe('schemaMatcher', function() {
                 }
             };
             var expectedMessage = "" +
-                "Element does not match schema:\n" +
+                NO_MATCH_HEADER +
                 "Expected element '.first .non-existent' to exist";
 
             expect(schemaMatcher.compare(element, expectedSchema).message).toBe(expectedMessage);
 
         });
 
+    });
+
+    describe('strict schema', function(){
+        it('should pass when the dom matches the schema exactly', function(){
+
+            var expectedSchema = {
+                '.first': {
+                    '.nestedFirst': shouldExist,
+                    '.nestedSecond': {
+                        '.nestedThird': shouldExist
+                    }
+                },
+                '.second': shouldExist
+            };
+
+            expect(exactSchemaMatcher.compare(element, expectedSchema).pass).toBe(true);
+        });
+
+        it('should fail when an extra element is present', function(){
+
+            var expectedSchema = {
+                '.first': {
+                    '.nestedFirst': shouldExist,
+                    '.nestedSecond': {
+                        '.nestedThird': shouldExist
+                    }
+                }
+            };
+
+            expect(exactSchemaMatcher.compare(element, expectedSchema).pass).toBe(false);
+
+        });
+
+        it('should provide appropriate message when an extra element is present', function(){
+
+            var expectedSchema = {
+                '.first': {
+                    '.nestedFirst': shouldExist,
+                    '.nestedSecond': {
+                        '.nestedThird': shouldExist
+                    }
+                }
+            };
+
+            var expectedMessage = "" +
+                NO_MATCH_HEADER +
+                "Unexpected Element: '.second'";
+            expect(exactSchemaMatcher.compare(element, expectedSchema).message).toBe(expectedMessage);
+
+        });
+
+        it('should fail when an expected element is absent', function() {
+
+            var expectedSchema = {
+                '.first': {
+                    '.nestedFirst': shouldExist,
+                    '.nestedSecond': {
+                        '.nestedThird': shouldExist,
+                        '.non-existent': shouldExist
+                    }
+                },
+                '.second': shouldExist
+            };
+
+            var expectedMessage = "" +
+                NO_MATCH_HEADER +
+                "Expected element '.first .nestedSecond .non-existent' to exist";
+            expect(exactSchemaMatcher.compare(element, expectedSchema).pass).toBe(false);
+            expect(exactSchemaMatcher.compare(element, expectedSchema).message).toBe(expectedMessage);
+        });
     });
 });
