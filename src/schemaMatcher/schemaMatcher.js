@@ -3,6 +3,47 @@ var schemaMatcher = (function (compileMessages, _) {
 
     var EXPECTED_PREFIX = "Element does not match schema:\n";
 
+
+    function Matcher(element, schema, path, strict){
+        this.element = element;
+        this.schema = schema;
+        this.path = path;
+        this.strict = strict;
+    }
+
+    Matcher.prototype.getMatchResult = function(){
+        var result;
+        if (_.isFunction(this.schema)) {
+            result = this.schema(this.element, this.path);
+        } else {
+            result = compare(this.element, this.schema, this.path + " ", this.strict);
+        }
+        return result;
+    };
+
+    function UnexpectedMatcher(jQActual){
+        this.unexpected = jQActual.children()
+    }
+
+    UnexpectedMatcher.prototype.allow = function (selector){
+        this.unexpected = this.unexpected.not(selector);
+    };
+
+    UnexpectedMatcher.prototype.hasUnexpected = function(){
+        return this.unexpected.length  > 0;
+    };
+
+    UnexpectedMatcher.prototype.getUnexpectedMessage = function(){
+        return "Unexpected Element: '." + this.unexpected.attr('class') + "'"
+    };
+
+    UnexpectedMatcher.prototype.getUnexpectedResult = function(){
+        return {
+            pass: false,
+            message: this.getUnexpectedMessage()
+        }
+    };
+
     return {
         toMatchSchema: function () {
             return {
@@ -28,32 +69,24 @@ var schemaMatcher = (function (compileMessages, _) {
         var message = "no message",
             results = [],
             selector,
-            matcher,
             result;
 
-        var unexpected = jQActual.children();
+        var unexpectedMatcher = new UnexpectedMatcher(jQActual);
 
         for(selector in expectedSchema){
             if(expectedSchema.hasOwnProperty(selector)){
-                matcher = expectedSchema[selector];
-                if (_.isFunction(matcher)) {
-                    // check if selector matches
-                    var expected = jQActual.find(selector);
-                    result = matcher(expected, path + selector);
-                    // check if any extra elements were present
-                } else {
-                    result = compare(jQActual.find(selector), matcher, path + selector + " ", strict);
-                }
-                unexpected = unexpected.not(selector);
+                var currentElement = jQActual.find(selector);
+                var currentSchema = expectedSchema[selector];
+                var selectorPath = path + selector;
+                var matcher = new Matcher(currentElement, currentSchema, selectorPath, strict);
+                result = matcher.getMatchResult();
                 results.push(result);
+                unexpectedMatcher.allow(selector);
             }
         }
 
-        if (strict && unexpected.length > 0) {
-            results.push({
-                pass: false,
-                message: "Unexpected Element: '." + unexpected.attr('class') + "'"
-            });
+        if (strict && unexpectedMatcher.hasUnexpected()) {
+            results.push(unexpectedMatcher.getUnexpectedResult());
         }
 
         result = {
@@ -64,6 +97,7 @@ var schemaMatcher = (function (compileMessages, _) {
 
         return result;
     }
+
 
     function allPass(results){
         return _.all(results, function(result){
