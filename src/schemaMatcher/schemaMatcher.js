@@ -1,91 +1,69 @@
-var schemaMatcher = (function (compileMessages, _) {
+var schemaMatcher = (function (compileMessages, Matcher) {
     'use strict';
 
     var EXPECTED_PREFIX = "Element does not match schema:\n";
 
+    return {
+        toMatchSchema: function () {
+            return {
+                compare: function (jQActual, expectedSchema) {
+                    var matcher = new Matcher(jQActual, expectedSchema, '', false);
+                    var result = matcher.getMatchResult();
+                    result.message = compileMessages(result.results, EXPECTED_PREFIX);
+                    return result
+                }
+            }
+        },
+        toMatchSchemaExactly: function () {
+            return {
+                compare: function (jQActual, expectedSchema) {
+                    var matcher = new Matcher(jQActual, expectedSchema, '', true);
+                    var result = matcher.getMatchResult();
+                    result.message = compileMessages(result.results, EXPECTED_PREFIX);
+                    return result
+                }
+            }
+        }
+    };
+});
 
-    function Matcher(element, schema, path, strict){
+var Matcher = (function (_) {
+
+    function Matcher(element, schema, path, strict) {
         this.element = element;
         this.schema = schema;
         this.path = path;
         this.strict = strict;
     }
 
-    Matcher.prototype.getMatchResult = function(){
+    Matcher.prototype.getMatchResult = function () {
         var result;
         if (_.isFunction(this.schema)) {
             result = this.schema(this.element, this.path);
         } else {
-            result = compare(this.element, this.schema, this.path + " ", this.strict);
+            result = this.recursiveCompare();
         }
         return result;
     };
 
-    function UnexpectedMatcher(jQActual){
-        this.unexpected = jQActual.children()
-    }
-
-    UnexpectedMatcher.prototype.allow = function (selector){
-        this.unexpected = this.unexpected.not(selector);
-    };
-
-    UnexpectedMatcher.prototype.hasUnexpected = function(){
-        return this.unexpected.length  > 0;
-    };
-
-    UnexpectedMatcher.prototype.getUnexpectedMessage = function(){
-        return "Unexpected Element: '." + this.unexpected.attr('class') + "'"
-    };
-
-    UnexpectedMatcher.prototype.getUnexpectedResult = function(){
-        return {
-            pass: false,
-            message: this.getUnexpectedMessage()
-        }
-    };
-
-    return {
-        toMatchSchema: function () {
-            return {
-                compare: function(jQActual, expectedSchema){
-                    var result = compare(jQActual, expectedSchema, '', false);
-                    result.message = compileMessages(result.results, EXPECTED_PREFIX);
-                    return result
-                }
-            }
-        },
-        toMatchSchemaExactly: function(){
-            return {
-                compare: function(jQActual, expectedSchema){
-                    var result = compare(jQActual, expectedSchema, '', true);
-                    result.message = compileMessages(result.results, EXPECTED_PREFIX);
-                    return result
-                }
-            }
-        }
-    };
-
-    function compare(jQActual, expectedSchema, path, strict) {
-        var message = "no message",
+    Matcher.prototype.recursiveCompare = function () {
+        var message = 'no message',
             results = [],
-            selector,
             result;
 
-        var unexpectedMatcher = new UnexpectedMatcher(jQActual);
+        var path = this.path ? this.path + ' ' : '';
 
-        for(selector in expectedSchema){
-            if(expectedSchema.hasOwnProperty(selector)){
-                var currentElement = jQActual.find(selector);
-                var currentSchema = expectedSchema[selector];
-                var selectorPath = path + selector;
-                var matcher = new Matcher(currentElement, currentSchema, selectorPath, strict);
+        var unexpectedMatcher = new UnexpectedMatcher(this.element);
+
+        _.keys(this.schema)
+            .forEach(function (selector) {
+                var matcher = new Matcher(this.element.find(selector), this.schema[selector], path + selector, this.strict);
                 result = matcher.getMatchResult();
                 results.push(result);
                 unexpectedMatcher.allow(selector);
-            }
-        }
+            }.bind(this));
 
-        if (strict && unexpectedMatcher.hasUnexpected()) {
+        if (this.strict && unexpectedMatcher.hasUnexpected()) {
             results.push(unexpectedMatcher.getUnexpectedResult());
         }
 
@@ -96,13 +74,39 @@ var schemaMatcher = (function (compileMessages, _) {
         };
 
         return result;
+
+    };
+
+    function UnexpectedMatcher(jQActual) {
+        this.unexpected = jQActual.children()
     }
 
+    UnexpectedMatcher.prototype.allow = function (selector) {
+        this.unexpected = this.unexpected.not(selector);
+    };
 
-    function allPass(results){
-        return _.all(results, function(result){
+    UnexpectedMatcher.prototype.hasUnexpected = function () {
+        return this.unexpected.length > 0;
+    };
+
+    UnexpectedMatcher.prototype.getUnexpectedMessage = function () {
+        return "Unexpected Element: '." + this.unexpected.attr('class') + "'"
+    };
+
+    UnexpectedMatcher.prototype.getUnexpectedResult = function () {
+        return {
+            pass: false,
+            message: this.getUnexpectedMessage()
+        }
+    };
+
+    function allPass(results) {
+        return _.all(results, function (result) {
             return result.pass;
         });
     }
-});
-window.schemaMatcher = schemaMatcher(window.compileMessages, window._);
+
+    return Matcher;
+})(window._);
+
+window.schemaMatcher = schemaMatcher(window.compileMessages, Matcher);
