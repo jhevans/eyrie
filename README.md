@@ -11,3 +11,5 @@
  - [ ] htmlEquals
  - [ ] hasClass
  - [ ] hasValue
+
+- [ ] package management
