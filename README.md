@@ -1,6 +1,8 @@
 # jasmine-schema-matcher
 ## TODO
-- [ ] Refactor schemaMatcher
+- [ ] Move all package management to jspm/remove npm
+- [ ] es6ify
+- [ ] Create distributable
 - [ ] Do readme
 - [ ] Set message on pass to something appropriate
 - [x] Match schema exactly
@@ -11,5 +13,3 @@
  - [ ] htmlEquals
  - [ ] hasClass
  - [ ] hasValue
-
-- [ ] package management
