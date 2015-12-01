@@ -1,4 +1,4 @@
-export function jQMatchers() {
+export default function jQMatchers() {
     'use strict';
     function doesExist(actual) {
         return actual.length > 0;

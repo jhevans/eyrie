@@ -1,5 +1,5 @@
 System.config({
-  baseURL: "/jasmine-schema-matcher/",
+  baseURL: "",
   defaultJSExtensions: true,
   transpiler: "babel",
   babelOptions: {

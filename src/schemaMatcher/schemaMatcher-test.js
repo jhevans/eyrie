@@ -1,8 +1,12 @@
+import jQMatchers from 'src/jQMatcher/jQMatcher.js'
+import schemaMatcher from 'src/schemaMatcher/schemaMatcher.js'
+import $ from 'jquery'
+
 describe('schemaMatcher', function() {
     'use strict';
     var shouldExist,
         shouldNotExist,
-        schemaMatcher,
+        local_schemaMatcher,
         exactSchemaMatcher,
         element,
         testHtml;
@@ -10,10 +14,10 @@ describe('schemaMatcher', function() {
     var NO_MATCH_HEADER = "Element does not match schema:\n";
 
     beforeEach(function(){
-        shouldExist = window.jQMatchers.toExist().compare;
-        shouldNotExist = window.jQMatchers.toExist().negativeCompare;
-        schemaMatcher = window.schemaMatcher.toMatchSchema();
-        exactSchemaMatcher = window.schemaMatcher.toMatchSchemaExactly();
+        shouldExist = jQMatchers().toExist().compare;
+        shouldNotExist = jQMatchers().toExist().negativeCompare;
+        local_schemaMatcher = schemaMatcher().toMatchSchema();
+        exactSchemaMatcher = schemaMatcher().toMatchSchemaExactly();
 
         testHtml = window.__html__['src/schemaMatcher/testHtml.html'];
         $('body').append(testHtml);
@@ -26,7 +30,7 @@ describe('schemaMatcher', function() {
                 ".first": shouldExist
             };
 
-            expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
+            expect(local_schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
         });
 
         it('should fail for single element schema with shouldNotExist matcher when element exists not', function(){
@@ -34,7 +38,7 @@ describe('schemaMatcher', function() {
                 ".first": shouldNotExist
             };
 
-            expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(false);
+            expect(local_schemaMatcher.compare(element, expectedSchema).pass).toBe(false);
         });
 
         it('should pass for flat schema when all predicates pass', function() {
@@ -43,7 +47,7 @@ describe('schemaMatcher', function() {
                 '.second': shouldExist
             };
 
-            expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
+            expect(local_schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
         });
 
         it('should fail for flat schema when one predicate fails', function() {
@@ -51,7 +55,7 @@ describe('schemaMatcher', function() {
                 '.second': shouldExist,
                 '.non-existent': shouldExist
             };
-            expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(false);
+            expect(local_schemaMatcher.compare(element, expectedSchema).pass).toBe(false);
         });
 
         it('should set appropriate message when one predicate fails', function(){
@@ -62,7 +66,7 @@ describe('schemaMatcher', function() {
             var expectedMessage = "" +
                 NO_MATCH_HEADER +
                 "Expected element '.non-existent' to exist";
-            expect(schemaMatcher.compare(element, expectedSchema).message).toEqual(expectedMessage);
+            expect(local_schemaMatcher.compare(element, expectedSchema).message).toEqual(expectedMessage);
         });
     });
 
@@ -74,7 +78,7 @@ describe('schemaMatcher', function() {
                 }
             };
 
-            expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
+            expect(local_schemaMatcher.compare(element, expectedSchema).pass).toBe(true);
         });
 
         it('should fail for nested schema with single shouldExist matcher when element exists not', function () {
@@ -84,7 +88,7 @@ describe('schemaMatcher', function() {
                 }
             };
 
-            expect(schemaMatcher.compare(element, expectedSchema).pass).toBe(false);
+            expect(local_schemaMatcher.compare(element, expectedSchema).pass).toBe(false);
         });
 
         it('should set appropriate message when one predicate fails', function(){
@@ -97,7 +101,7 @@ describe('schemaMatcher', function() {
                 NO_MATCH_HEADER +
                 "Expected element '.first .non-existent' to exist";
 
-            expect(schemaMatcher.compare(element, expectedSchema).message).toBe(expectedMessage);
+            expect(local_schemaMatcher.compare(element, expectedSchema).message).toBe(expectedMessage);
 
         });
 

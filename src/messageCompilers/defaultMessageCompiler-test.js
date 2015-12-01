@@ -1,9 +1,7 @@
-describe('defaultMessageCompiler', function() {
-    var compileMessages;
+import compileMessages from 'src/messageCompilers/defaultMessageCompiler.js'
 
-    beforeEach(function() {
-        compileMessages = window.compileMessages;
-    });
+describe('defaultMessageCompiler', function() {
+
     it('should be tested', function(){
         var results = [
             {
