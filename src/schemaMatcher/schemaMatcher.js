@@ -1,4 +1,7 @@
-var schemaMatcher = (function (compileMessages, Matcher) {
+import Matcher from 'src/schemaMatcher/Matcher.js'
+import compileMessages from 'src/messageCompilers/defaultMessageCompiler.js'
+
+export function schemaMatcher() {
     'use strict';
 
     var EXPECTED_PREFIX = "Element does not match schema:\n";
@@ -25,6 +28,4 @@ var schemaMatcher = (function (compileMessages, Matcher) {
             }
         }
     };
-});
-
-window.schemaMatcher = schemaMatcher(window.compileMessages, window.Matcher);
+};

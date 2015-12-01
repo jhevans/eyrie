@@ -1,19 +1,14 @@
-var compileMessages = (function () {
+export default function compileMessages(results, prefix) {
     'use strict';
+    var message = prefix || "";
 
-    return function (results, prefix) {
-        var message = prefix || "";
+    var failures = [];
+    results.forEach(function (result) {
+        if (!result.pass) {
+            failures.push(result.message)
+        }
+    });
 
-        var failures = [];
-        results.forEach(function(result){
-            if (!result.pass){
-                failures.push(result.message)
-            }
-        });
-
-        message = message + failures.join('\n');
-        return message;
-    }
-});
-
-window.compileMessages = compileMessages();
+    message = message + failures.join('\n');
+    return message;
+}

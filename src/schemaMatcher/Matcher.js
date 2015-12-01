@@ -1,14 +1,17 @@
-window.Matcher = (function (_, UnexpectedMatcher) {
-    'use strict';
+import UnexpectedMatcher from 'src/schemaMatcher/UnexpectedMatcher.js';
+import _ from 'underscore'
+import compileMessages from 'src/messageCompilers/defaultMessageCompiler.js'
 
-    function Matcher(element, schema, path, strict) {
+export default class Matcher {
+
+    constructor(element, schema, path, strict) {
         this.element = element;
         this.schema = schema;
         this.path = path;
         this.strict = strict;
     }
 
-    Matcher.prototype.getMatchResult = function () {
+    getMatchResult () {
         var result;
         if (_.isFunction(this.schema)) {
             result = this.schema(this.element, this.path);
@@ -16,9 +19,9 @@ window.Matcher = (function (_, UnexpectedMatcher) {
             result = this.recursiveCompare();
         }
         return result;
-    };
+    }
 
-    Matcher.prototype.recursiveCompare = function () {
+    recursiveCompare () {
         var message = 'no message',
             results = [],
             result;
@@ -49,7 +52,5 @@ window.Matcher = (function (_, UnexpectedMatcher) {
 
         return result;
 
-    };
-
-    return Matcher;
-})(window._, window.UnexpectedMatcher);
+    }
+}
