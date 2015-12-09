@@ -23,6 +23,7 @@
     "dependencies": {
       "components/jquery": "github:components/jquery@^2.1.4",
       "jquery": "github:components/jquery@^2.1.4",
+      "karma-jspm": "npm:karma-jspm@^2.0.2",
       "lodash-node": "npm:lodash-node@^3.10.1",
       "myname": "npm:underscore@^1.8.3",
       "underscore": "npm:underscore@^1.8.3"
