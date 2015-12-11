@@ -123,7 +123,7 @@ describe('schemaMatcher', function() {
             expect(exactSchemaMatcher.compare(element, expectedSchema).pass).toBe(true);
         });
 
-        it('should fail when an extra element is present', function(){
+        it('should fail when an extra element is present in the dom', function(){
 
             var expectedSchema = {
                 '.first': {
@@ -138,8 +138,7 @@ describe('schemaMatcher', function() {
 
         });
 
-        it('should provide appropriate message when an extra element is present', function(){
-
+        it('should provide appropriate message when an extra element is present in the dom', function(){
             var expectedSchema = {
                 '.first': {
                     '.nestedFirst': shouldExist,

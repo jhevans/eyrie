@@ -35,6 +35,23 @@ describe('integration with jasmine', () => {
             '.second': shouldExist
         };
 
+        expect(element).toMatchSchema(expectedSchema);
         expect(element).toMatchSchemaExactly(expectedSchema);
+    });
+
+    it("should allow expect().not.toMatchSchema() (not that you'd ever want to do this...)", () => {
+        var expectedSchema = {
+            '.first': {
+                '.nestedFirst': shouldExist,
+                '.somethingElse': shouldExist,
+                '.nestedSecond': {
+                    '.nestedThird': shouldExist
+                }
+            },
+            '.second': shouldExist
+        };
+
+        expect(element).not.toMatchSchema(expectedSchema);
+        expect(element).not.toMatchSchemaExactly(expectedSchema);
     });
 });
