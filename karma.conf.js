@@ -19,7 +19,9 @@ module.exports = function (config) {
 
         jspm: {
             loadFiles: [
-                'src/**/*-test.js'
+                'eyrie.js'
+                //'src/**/*-test.js',
+                //'src/main.js'
             ],
             serveFiles: [
                 'src/**/*.js'

@@ -87,6 +87,11 @@ describe('schemaMatcher', function() {
                     '.non-existent': shouldExist
                 }
             };
+            var expectedSchema = {
+                ".first": {
+                    '.non-existent': shouldExist
+                }
+            };
 
             expect(local_schemaMatcher.compare(element, expectedSchema).pass).toBe(false);
         });
