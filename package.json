@@ -5,7 +5,7 @@
   "main": "schemaMatcher.js",
   "dependencies": {
     "underscore": "^1.8.3",
-    "jquery": "^2.1.4"
+    "jquery": "^3.4.1"
   },
   "devDependencies": {
     "jspm": "^0.16.15",
